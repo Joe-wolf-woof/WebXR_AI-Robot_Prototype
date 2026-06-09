@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5つの感情表現ロボット【WebXR】</title>
+    <title>5つの感情表現ロボット【WebXR】軽量化版</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script>
-        // 視線カーソル用コンポーネント
+        // 视線カーソル用コンポーネント
         AFRAME.registerComponent('clickable-btn', {
             init: function () {
                 this.el.addEventListener('mouseenter', () => {
@@ -21,16 +21,17 @@
         // ページ読み込み完了時、地面に同心円状のお花を配置するスクリプト
         window.addEventListener('DOMContentLoaded', () => {
             const flowerField = document.getElementById('flower-field');
+            // カラフルな花畑にするためのカラーバリエーション
             const flowerColors = ['#FF3E96', '#FF3636', '#FF69B4', '#FFA500', '#9B30FF', '#00BFFF', '#7B68EE', '#FFFFFF', '#FFD700'];
             
-            const totalFlowers = 2000;
-            const rings = 20;
+            const totalFlowers = 1500; // 1500本に削減
+            const rings = 15;
 
             let flowerCount = 0;
-            // ユーザー(0,0,0)を中心に半径2.0mから25mまで同心円状に幅広く配置
+            // ユーザー(0,0,0)を中心に半径1.0mから8.5mまで高密度に密集配置
             for (let r = 0; r < rings; r++) {
-                const distance = 2.0 + (r * 1.15); // 各リングの半径
-                const flowersInRing = Math.floor((totalFlowers / rings) * (distance / 8)); // 外側ほど花の数を増やす
+                const distance = 1.0 + (r * 0.5); // 各リングの半径を狭くして密集させる
+                const flowersInRing = Math.floor((totalFlowers / rings) * (distance / 4)); // 外側ほど花の数を増やす
                 
                 for (let i = 0; i < flowersInRing; i++) {
                     if (flowerCount >= totalFlowers) break;
@@ -45,11 +46,11 @@
                     const flowerGroup = document.createElement('a-entity');
                     flowerGroup.setAttribute('position', `${x} ${y} ${z}`);
                     
-                    // 花のサイズを従来の「3倍」に変更
-                    const scale = 1.2 + Math.random() * 1.5;
+                    // お花のサイズ設定
+                    const scale = 1.0 + Math.random() * 1.2;
                     flowerGroup.setAttribute('scale', `${scale} ${scale} ${scale}`);
 
-                    // 1. 茎（葉を追加して1枚目の写真のように表現）
+                    // 1. 茎と葉の生成
                     const stemGroup = document.createElement('a-entity');
                     const stemHeight = 0.1 + Math.random() * 0.12;
                     const stem = document.createElement('a-cylinder');
@@ -59,7 +60,7 @@
                     stem.setAttribute('color', '#2E8B57');
                     stemGroup.appendChild(stem);
 
-                    // 葉（2枚のシリンダーを傾けて追加）
+                    // 葉（2枚）
                     const leaf1 = document.createElement('a-cylinder');
                     leaf1.setAttribute('radius', '0.003');
                     leaf1.setAttribute('height', '0.04');
@@ -77,36 +78,35 @@
 
                     flowerGroup.appendChild(stemGroup);
 
-                    // 2. 花びら（1枚目の写真のように詳細なひまわり風に）
-                    // 1つの花びらを細長い円錐（cone）またはひし形で12枚配置
-                    const petalColors = ['#FAD02E', '#F1B82D', '#FFD700', '#FFC107'];
+                    // 2. 花びら（軽量化：6枚構成＆カラフル化）
                     const petalsGroup = document.createElement('a-entity');
                     petalsGroup.setAttribute('position', `0 ${stemHeight} 0`);
                     petalsGroup.setAttribute('rotation', `${Math.random() * 10} ${(angle * 180 / Math.PI)} ${Math.random() * 10}`);
                     
-                    const randomPetalColor = petalColors[Math.floor(Math.random() * petalColors.length)];
-                    for (let p = 0; p < 12; p++) {
+                    // ランダムに花の色を決定してカラフルにする
+                    const randomFlowerColor = flowerColors[Math.floor(Math.random() * flowerColors.length)];
+                    
+                    for (let p = 0; p < 6; p++) { // 12枚から6枚に削減してポリゴン数を半分に軽量化
                         const petal = document.createElement('a-cone');
-                        petal.setAttribute('radius-bottom', '0.015');
+                        petal.setAttribute('radius-bottom', '0.02');
                         petal.setAttribute('radius-top', '0.0');
-                        petal.setAttribute('height', '0.12'); // 長く
-                        const petalAngle = (p / 12) * Math.PI * 2;
-                        const petalX = Math.cos(petalAngle) * 0.05;
-                        const petalZ = Math.sin(petalAngle) * 0.05;
+                        petal.setAttribute('height', '0.1'); 
+                        const petalAngle = (p / 6) * Math.PI * 2;
+                        const petalX = Math.cos(petalAngle) * 0.04;
+                        const petalZ = Math.sin(petalAngle) * 0.04;
                         petal.setAttribute('position', `${petalX} 0 ${petalZ}`);
-                        // 1枚目の写真のように、中心から外側へ綺麗に広がるように回転
                         petal.setAttribute('rotation', `-90 ${(petalAngle * 180 / Math.PI) - 90} 0`);
-                        petal.setAttribute('color', randomPetalColor);
+                        petal.setAttribute('color', randomFlowerColor);
                         petalsGroup.appendChild(petal);
                     }
                     flowerGroup.appendChild(petalsGroup);
 
-                    // 3. 花の中央（ひまわりの芯を平たく、大きくして表現）
+                    // 3. 花の中央（芯の部分）
                     const center = document.createElement('a-cylinder');
-                    center.setAttribute('radius', '0.045'); // 大きく
-                    center.setAttribute('height', '0.01'); // 平たく
-                    center.setAttribute('position', `0 ${stemHeight + 0.01} 0`);
-                    center.setAttribute('color', '#3E2723'); // 濃い茶色
+                    center.setAttribute('radius', '0.035'); 
+                    center.setAttribute('height', '0.01'); 
+                    center.setAttribute('position', `0 ${stemHeight + 0.005} 0`);
+                    center.setAttribute('color', '#FFD700'); // 中央は黄色系に固定して花びらを引き立てる
                     flowerGroup.appendChild(center);
 
                     flowerField.appendChild(flowerGroup);
@@ -123,17 +123,6 @@
         <a-sky color="#87CEEB"></a-sky>
 
         <a-sphere id="sun" position="10 15 5" radius="1.8" color="#FFD700" material="shader: flat; fog: false"></a-sphere>
-
-        <a-cone id="sunbeam-cone" 
-                position="5 7.5 1.25" 
-                rotation="-50.20 -36.87 0"
-                radius-bottom="5.0" 
-                radius-top="0.0" 
-                height="19.53" 
-                color="#FFFFA0" 
-                opacity="0.16" 
-                material="shader: flat; transparent: true; side: double">
-        </a-cone>
 
         <a-entity light="type: ambient; color: #E0F2FF; intensity: 0.8"></a-entity>
         <a-entity light="type: directional; color: #FFFDF0; intensity: 1.5; castShadow: true" position="10 15 5"></a-entity>
