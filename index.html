@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5 Emotion Robots - Sunbeam and Concentric Flower Field WebXR</title>
+    <title>5 Emotion Robots - Concentric Flower Field WebXR</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script>
         // 視線カーソル用コンポーネント
@@ -31,7 +31,7 @@
             const centerZ = -2.5;
 
             let flowerCount = 0;
-            // ロボットを中心に、半径1.5mから9.0m（より高密度・密集）まで同心円状に配置
+            // ロボットを中心に、半径1.5mから9.0mまで同心円状に配置
             for (let r = 0; r < rings; r++) {
                 const distance = 1.5 + (r * 0.5); // 各リングの半径の間隔を狭めて密集化
                 const flowersInRing = Math.floor((totalFlowers / rings) * (distance / 4)); // 外側ほど花の数を増やす
@@ -50,7 +50,7 @@
                     const flowerGroup = document.createElement('a-entity');
                     flowerGroup.setAttribute('position', `${x} ${y} ${z}`);
                     
-                    // 【サイズを2倍に変更】(元の 0.4~0.9 から 0.8~1.8 へ)
+                    // サイズを2倍に変更
                     const scale = (0.4 + Math.random() * 0.5) * 2;
                     flowerGroup.setAttribute('scale', `${scale} ${scale} ${scale}`);
 
@@ -80,10 +80,10 @@
                     center.setAttribute('color', '#FFD700'); 
                     flowerGroup.appendChild(center);
 
-                    // 【追加：葉っぱ】茎の横に緑の小さな球体（楕円形）を配置
+                    // 葉っぱ：茎の横に緑の小さな球体（楕円形）を配置
                     const leaf = document.createElement('a-sphere');
                     leaf.setAttribute('radius', '0.02');
-                    leaf.setAttribute('scale', '2 0.5 1'); // 横長に伸ばして葉っぱらしくする
+                    leaf.setAttribute('scale', '2 0.5 1');
                     leaf.setAttribute('position', `0.03 ${stemHeight * 0.5} 0`);
                     leaf.setAttribute('rotation', '0 0 20');
                     leaf.setAttribute('color', '#32CD32');
@@ -102,21 +102,10 @@
         
         <a-sky color="#87CEEB"></a-sky>
 
-        <a-sphere id="sun" position="10 15 5" radius="1.8" color="#FFD700" material="shader: flat; fog: false"></a-sphere>
-
-        <a-cone id="sunbeam-cone" 
-                position="5 7.75 2.5" 
-                rotation="-54.73 -26.56 0"
-                radius-bottom="4.5" 
-                radius-top="0.2" 
-                height="19.0" 
-                color="#FFFFA0" 
-                opacity="0.15" 
-                material="shader: flat; transparent: true; side: double">
-        </a-cone>
+        <a-sphere id="sun" position="15 18 -10" radius="1.8" color="#FFD700" material="shader: flat; fog: false"></a-sphere>
 
         <a-entity light="type: ambient; color: #E0F2FF; intensity: 0.8"></a-entity>
-        <a-entity light="type: directional; color: #FFFDF0; intensity: 1.5; castShadow: true" position="10 15 5"></a-entity>
+        <a-entity light="type: directional; color: #FFFDF0; intensity: 1.5; castShadow: true" position="15 18 -10"></a-entity>
 
         <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#3A7D14"></a-plane>
         
