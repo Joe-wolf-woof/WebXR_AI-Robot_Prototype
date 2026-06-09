@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5つの感情表現ロボット - Gemini WebXR</title>
+    <title>5つの感情表現ロボット【WebXR】</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script>
         // 視線カーソルが重なったときに色を変えるコンポーネント
         AFRAME.registerComponent('clickable-btn', {
             init: function () {
                 this.el.addEventListener('mouseenter', () => {
-                    this.el.setAttribute('color', '#FFC65D');
+                    this.el.setAttribute('color', '#FFD700');
                 });
                 this.el.addEventListener('mouseleave', () => {
-                    this.el.setAttribute('color', '#333333');
+                    this.el.setAttribute('color', '#FFF');
                 });
             }
         });
@@ -22,7 +22,27 @@
 <body>
 
     <a-scene xr-mode-ui="enabled: true">
-        <a-sky color="#1a1a2e"></a-sky>
+        
+        <a-sky color="#7ec0ee"></a-sky>
+
+        <a-entity light="type: ambient; color: #DFF0FF; intensity: 0.6"></a-entity>
+        <a-entity light="type: directional; color: #FFFDF0; intensity: 1.2; castShadow: true" position="5 10 3"></a-entity>
+
+        <a-plane position="0 0 0" rotation="-90 0 0" width="30" height="30" color="#458B00"></a-plane>
+        
+        <a-entity id="flower-field">
+            <a-sphere position="-1 0.05 -1.5" radius="0.04" color="#FF3E96"></a-sphere>
+            <a-sphere position="-1.2 0.04 -1.8" radius="0.03" color="#FF3E96"></a-sphere>
+            <a-sphere position="1.5 0.05 -2" radius="0.05" color="#FF3636"></a-sphere>
+            <a-sphere position="-0.8 0.05 -2.2" radius="0.04" color="#FFD700"></a-sphere>
+            <a-sphere position="0.8 0.04 -1.3" radius="0.03" color="#FFD700"></a-sphere>
+            <a-sphere position="1.1 0.06 -1.7" radius="0.05" color="#FFA500"></a-sphere>
+            <a-sphere position="-1.5 0.05 -1.2" radius="0.04" color="#9B30FF"></a-sphere>
+            <a-sphere position="0.3 0.04 -1.6" radius="0.03" color="#00BFFF"></a-sphere>
+            <a-sphere position="1.7 0.05 -1.1" radius="0.04" color="#7B68EE"></a-sphere>
+            <a-sphere position="-0.4 0.05 -1.4" radius="0.03" color="#FFFFFF"></a-sphere>
+            <a-sphere position="0.5 0.05 -2.4" radius="0.04" color="#FFFFFF"></a-sphere>
+        </a-entity>
 
         <a-entity id="robot-master-container" position="0 0 -2.5">
             <a-entity id="robot-assembly" position="0 0.8 0">
@@ -70,39 +90,53 @@
             </a-entity>
         </a-entity>
 
-        <a-plane position="0 0 0" rotation="-90 0 0" width="20" height="20" color="#16161d"></a-plane>
-        <a-entity light="type: ambient; color: #BBB"></a-entity>
-        <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
-        
         <a-entity id="vr-ui" position="0 0.6 -1.2" rotation="-15 0 0">
-            <a-plane width="1.6" height="0.8" color="#111111" opacity="0.9"></a-plane>
+            <a-plane width="1.6" height="0.8" color="#222222" opacity="0.85"></a-plane>
             
             <a-text id="vr-robot-text" 
-                    value="Robot: Talk to me by staring at options!" 
+                    value="ロボット: ぼくを見つめて選択肢を選んでね！" 
+                    font="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.json"
+                    font-image="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.png"
+                    shader="msdf"
                     position="0 0.25 0.02" 
                     align="center" 
                     width="1.4" 
                     color="#FFF">
             </a-text>
 
-            <a-plane class="clickable" clickable-btn position="-0.4 -0.1 0.02" width="0.35" height="0.15" color="#333" onclick="talkToRobot('You look amazing today!')">
-                <a-text value="Praise" align="center" width="1.5" color="#4CC3D9"></a-text>
+            <a-plane class="clickable" clickable-btn position="-0.5 -0.1 0.02" width="0.4" height="0.15" color="#FFF" onclick="talkToRobot('いつも格好いい服を着ているね！大好きだよ！')">
+                <a-text value="ほめる" 
+                        font="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.json"
+                        font-image="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.png"
+                        shader="msdf" align="center" width="1.5" color="#333"></a-text>
             </a-plane>
 
-            <a-plane class="clickable" clickable-btn position="0 -0.1 0.02" width="0.35" height="0.15" color="#333" onclick="talkToRobot('Go away, silly robot.')">
-                <a-text value="Scold" align="center" width="1.5" color="#4CC3D9"></a-text>
+            <a-plane class="clickable" clickable-btn position="0 -0.1 0.02" width="0.4" height="0.15" color="#FFF" onclick="talkToRobot('あっちにいって！ポンコツロボット！')">
+                <a-text value="しかる" 
+                        font="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.json"
+                        font-image="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.png"
+                        shader="msdf" align="center" width="1.5" color="#333"></a-text>
             </a-plane>
 
-            <a-plane class="clickable" clickable-btn position="0.4 -0.1 0.02" width="0.35" height="0.15" color="#333" onclick="talkToRobot('I lost my favorite toy...')">
-                <a-text value="Sad News" align="center" width="1.5" color="#4CC3D9"></a-text>
+            <a-plane class="clickable" clickable-btn position="0.5 -0.1 0.02" width="0.4" height="0.15" color="#FFF" onclick="talkToRobot('お気に入りのおもちゃを無くしちゃったんだ...')">
+                <a-text value="かなしいおしらせ" 
+                        font="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.json"
+                        font-image="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.png"
+                        shader="msdf" align="center" width="1.3" color="#333"></a-text>
             </a-plane>
 
-            <a-plane class="clickable" clickable-btn position="-0.2 -0.3 0.02" width="0.35" height="0.15" color="#333" onclick="talkToRobot('Hello! Let us play together!')">
-                <a-text value="Greet" align="center" width="1.5" color="#4CC3D9"></a-text>
+            <a-plane class="clickable" clickable-btn position="-0.25 -0.3 0.02" width="0.4" height="0.15" color="#FFF" onclick="talkToRobot('こんにちは！今日もお花畑で一緒に遊ぼう！')">
+                <a-text value="あいさつする" 
+                        font="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.json"
+                        font-image="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.png"
+                        shader="msdf" align="center" width="1.5" color="#333"></a-text>
             </a-plane>
 
-            <a-plane class="clickable" clickable-btn position="0.2 -0.3 0.02" width="0.35" height="0.15" color="#333" onclick="talkToRobot('Abra-ca-dabra 12345!')">
-                <a-text value="Mystery" align="center" width="1.5" color="#4CC3D9"></a-text>
+            <a-plane class="clickable" clickable-btn position="0.25 -0.3 0.02" width="0.4" height="0.15" color="#FFF" onclick="talkToRobot('アブラカタブラ！12345！変な呪文！')">
+                <a-text value="？？？" 
+                        font="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.json"
+                        font-image="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/mplus1p/Mplus1p-Medium.png"
+                        shader="msdf" align="center" width="1.5" color="#333"></a-text>
             </a-plane>
         </a-entity>
 
@@ -111,12 +145,12 @@
                       raycaster="objects: .clickable"
                       fuse="true" 
                       fuse-timeout="1000"
-                      color="#4CC3D9"
+                      color="#FF3E96"
                       geometry="primitive: ring; radiusInner: 0.015; radiusOuter: 0.025"
                       position="0 0 -1">
             </a-cursor>
         </a-entity>
-    </a-scene>
+    </scene>
 
     <script>
         const API_KEY = "AQ.Ab8RN6KV_9pkC7l47CkDd3brktIQJkwi2YGs46igNTucVnOx4A"; 
@@ -132,13 +166,13 @@
 
         async function talkToRobot(userMessage) {
             const vrRobotText = document.getElementById("vr-robot-text");
-            vrRobotText.setAttribute("value", "Robot: Thinking...");
+            vrRobotText.setAttribute("value", "ロボット: かんがえ中...");
 
             const prompt = `
-            あなたは感情を持ったロボットです。ユーザーの発言に対して、短く簡潔な「英語(English)」で会話をしてください。日本語は絶対に使わないでください。30文字以内で短く答えてください。
+            あなたは感情を持ったロボットです。ユーザーの発言に対して、短く簡潔な「日本語」で会話をしてください。30文字以内で短く答えてください。
             
             【超重要ルール】
-            ユーザーの発言から【喜・怒・哀・楽】のどれに当てはまるかを判定し、必ず生成する英語テキストの「一番最初」に指定の日本語タグを付けてください。
+            ユーザーの発言から【喜・怒・哀・楽】のどれに当てはまるかを判定し、必ず生成するテキストの「一番最初」に指定の日本語タグを付けてください。
             もしどれにも分類できない、あるいは答えに困るような内容の場合は【不】と判定してください。
             
             基準：
@@ -166,7 +200,7 @@
 
             } catch (error) {
                 console.error(error);
-                applyRobotState("【不】Error: Something went wrong.", vrRobotText);
+                vrRobotText.setAttribute("value", "ロボット: エラーがおきちゃったみたい。");
             }
         }
 
@@ -181,7 +215,7 @@
             }
 
             // VR空間内のテキスト属性を更新
-            uiElement.setAttribute("value", "Robot: " + cleanText);
+            uiElement.setAttribute("value", "ロボット: " + cleanText);
 
             const head = document.getElementById("robot-head");
             const body = document.getElementById("robot-body");
