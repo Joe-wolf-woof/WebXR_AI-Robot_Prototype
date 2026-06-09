@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5つの感情表現ロボット - Gemini WebXR (VR対応版)</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script>
+        AFRAME.registerComponent('clickable-text', {
+            init: function () {
+                this.el.addEventListener('mouseenter', () => {
+                    this.el.setAttribute('text', 'color', '#FFF000');
+                });
+                this.el.addEventListener('mouseleave', () => {
+                    this.el.setAttribute('text', 'color', '#4CC3D9');
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <a-scene xr-mode-ui="enabled: true">
+        <a-sky color="#1a1a2e"></a-sky>
+
+        <a-entity id="robot-master-container" position="0 0 -2.5">
+            <a-entity id="robot-assembly" position="0 0.8 0">
+                
+                <a-text id="robot-question-mark" 
+                        value="?" 
+                        position="0 1.6 0" 
+                        scale="0 0 0" 
+                        color="#FFFFFF" 
+                        align="center" 
+                        width="7" 
+                        font="mozillavr">
+                </a-text>
+
+                <a-cylinder position="0 1.1 0" radius="0.01" height="0.2" color="#aaa"></a-cylinder>
+                <a-sphere id="robot-antenna-top" position="0 1.2 0" radius="0.04" color="#7BC8A4"></a-sphere>
+
+                <a-entity id="robot-head-group" position="0 0.8 0">
+                    <a-box id="robot-head" position="0 0 0" width="0.5" height="0.4" depth="0.4" color="#7BC8A4"></a-box>
+                    
+                    <a-box id="eye-l" position="-0.12 0.05 0.21" width="0.06" height="0.06" depth="0.01" color="#000"></a-box>
+                    <a-box id="eye-r" position="0.12 0.05 0.21" width="0.06" height="0.06" depth="0.01" color="#000"></a-box>
+                    <a-box id="mouth" position="0 -0.08 0.21" width="0.25" height="0.04" depth="0.01" color="#000"></a-box>
+                </a-entity>
+
+                <a-cylinder position="0 0.55 0" radius="0.06" height="0.1" color="#888"></a-cylinder>
+
+                <a-box id="robot-body" position="0 0.1 0" width="0.7" height="0.8" depth="0.5" color="#7BC8A4"></a-box>
+                <a-box position="0 0.1 0.26" width="0.4" height="0.3" depth="0.01" color="#fff" opacity="0.2"></a-box>
+
+                <a-entity id="arm-l-container" position="-0.4 0.4 0">
+                    <a-box id="arm-l" position="0 -0.2 0" width="0.1" height="0.5" depth="0.1" color="#888"></a-box>
+                </a-entity>
+                
+                <a-entity id="arm-r-container" position="0.4 0.4 0">
+                    <a-box id="arm-r" position="0 -0.2 0" width="0.1" height="0.5" depth="0.1" color="#888"></a-box>
+                </a-entity>
+
+                <a-entity id="leg-l-container" position="-0.18 -0.3 0">
+                    <a-cylinder id="leg-l" position="0 -0.2 0" radius="0.05" height="0.4" color="#666"></a-cylinder>
+                </a-entity>
+                <a-entity id="leg-r-container" position="0.18 -0.3 0">
+                    <a-cylinder id="leg-r" position="0 -0.2 0" radius="0.05" height="0.4" color="#666"></a-cylinder>
+                </a-entity>
+            </a-entity>
+        </a-entity>
+
+        <a-plane position="0 0 0" rotation="-90 0 0" width="20" height="20" color="#16161d"></a-plane>
+        <a-entity light="type: ambient; color: #BBB"></a-entity>
+        <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
+        
+        <a-entity id="vr-ui" position="0 0.6 -1.5" rotation="-20 0 0">
+            <a-plane width="1.8" height="0.9" color="#000" opacity="0.85" shader="flat"></a-plane>
+            
+            <a-text id="vr-robot-text" 
+                    value="Robot: Talk to me! (Gaze at choices)" 
+                    position="0 0.3 0.01" 
+                    align="center" 
+                    width="1.6" 
+                    color="#EFEFEF">
+            </a-text>
+
+            <a-entity id="btn-1" clickable-text position="-0.5 -0.1 0.01" onclick="talkToRobot('You are awesome! Thank you!')">
+                <a-plane width="0.45" height="0.15" color="#333"></a-plane>
+                <a-text value="Praise" align="center" width="1.5" color="#4CC3D9" position="0 0 0.01"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-2" clickable-text position="0 -0.1 0.01" onclick="talkToRobot('I hate you, stupid robot.')">
+                <a-plane width="0.45" height="0.15" color="#333"></a-plane>
+                <a-text value="Angry" align="center" width="1.5" color="#4CC3D9" position="0 0 0.01"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-3" clickable-text position="0.5 -0.1 0.01" onclick="talkToRobot('I feel so lonely and sad today...')">
+                <a-plane width="0.45" height="0.15" color="#333"></a-plane>
+                <a-text value="Sad" align="center" width="1.5" color="#4CC3D9" position="0 0 0.01"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-4" clickable-text position="-0.25 -0.3 0.01" onclick="talkToRobot('Good morning! Let\'s have fun!')">
+                <a-plane width="0.45" height="0.15" color="#333"></a-plane>
+                <a-text value="Happy" align="center" width="1.5" color="#4CC3D9" position="0 0 0.01"></a-text>
+            </a-entity>
+
+            <a-entity id="btn-5" clickable-text position="0.25 -0.3 0.01" onclick="talkToRobot('Blah blah abracadabra 12345')">
+                <a-plane width="0.45" height="0.15" color="#333"></a-plane>
+                <a-text value="Unknown" align="center" width="1.5" color="#4CC3D9" position="0 0 0.01"></a-text>
+            </a-entity>
+        </a-entity>
+
+        <a-entity camera look-controls position="0 1.5 0">
+            <a-cursor id="cursor"
+                      animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
+                      animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1000"
+                      event-set__mouseenter="_event: mouseenter; color: springgreen"
+                      event-set__mouseleave="_event: mouseleave; color: black"
+                      raycaster="objects: [clickable-text]"
+                      fuse="true" 
+                      fuse-timeout="1000"
+                      color="#4CC3D9"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      position="0 0 -1">
+            </a-cursor>
+        </a-entity>
+    </a-scene>
+
+    <script>
+        // 【注意】本番運用の際は、APIキーの漏洩を防ぐためサーバーサイド（Node.js等）を経由させてください。
+        const API_KEY = "AQ.Ab8RN6KV_9pkC7l47CkDd3brktIQJkwi2YGs46igNTucVnOx4A"; 
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+
+        const EMOTION_STATES = {
+            "喜": { color: "#FFC65D", eyeScale: "1 1 1", eyeRotL: "0 0 10", eyeRotR: "0 0 -10", mouthSize: "0.22 0.12 0.01" },
+            "怒": { color: "#EF2D5E", eyeScale: "1 0.4 1", eyeRotL: "0 0 -20", eyeRotR: "0 0 20", mouthSize: "0.15 0.03 0.01" },
+            "哀": { color: "#4CC3D9", eyeScale: "0.6 1 1", eyeRotL: "0 0 25", eyeRotR: "0 0 -25", mouthSize: "0.1 0.02 0.01" },
+            "楽": { color: "#7BC8A4", eyeScale: "1.3 0.3 1", eyeRotL: "0 0 0", eyeRotR: "0 0 0", mouthSize: "0.25 0.04 0.01" },
+            "不": { color: "#A0A0A0", eyeScale: "0.8 0.8 1", eyeRotL: "0 0 15", eyeRotR: "0 0 15", mouthSize: "0.06 0.06 0.01" } 
+        };
+
+        // 引数でユーザーメッセージを受け取るように変更
+        async function talkToRobot(userMessage) {
+            const vrRobotText = document.getElementById("vr-robot-text");
+            if (!userMessage) return;
+
+            vrRobotText.setAttribute("value", "Robot: Thinking...");
+
+            const prompt = `
+            あなたは感情を持ったロボットです。ユーザーの発言に対して短く会話をしてください。日本語ではなく、VR表示に適した「英語」で30文字以内で応答してください。
+            
+            【超重要ルール】
+            ユーザーの発言から【喜・怒・哀・楽】のどれに当てはまるかを判定し、必ず生成する応答テキストの「一番最初」に指定のタグを付けてください。
+            もしどれにも分類できない、あるいは答えに困るような内容の場合は【不】と判定してください。
+            
+            基準：
+            【喜】ユーザーがあなたを褒めてくれたとき、感謝してくれたとき
+            【怒】ユーザーが攻撃的、または意地悪なとき、罵倒されたとき
+            【哀】ネガティブ、寂しい、悲しい話題のとき
+            【楽】ポジティブ、楽しそう、機嫌が良いとき、日常的な挨拶
+            【不】意味が分からない言葉、質問の意味が噛み合わないとき、分類不能なとき
+            
+            ユーザーの発言：
+            「${userMessage}」
+            `;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+
+                const data = await response.json();
+                const aiResponse = data.candidates[0].content.parts[0].text.trim();
+
+                applyRobotState(aiResponse, vrRobotText);
+
+            } catch (error) {
+                console.error(error);
+                applyRobotState("【不】Error: Connection failed.", vrRobotText);
+            }
+        }
+
+        function applyRobotState(aiResponse, uiElement) {
+            let emotion = "不"; 
+            let cleanText = aiResponse;
+
+            const match = aiResponse.match(/【(喜|怒|哀|楽|不)】/);
+            if (match) {
+                emotion = match[1];
+                cleanText = aiResponse.replace(/【.*?】/, "").trim();
+            }
+
+            // VR空間内のテキスト属性を更新
+            uiElement.setAttribute("value", "Robot: " + cleanText);
+
+            const head = document.getElementById("robot-head");
+            const body = document.getElementById("robot-body");
+            const antenna = document.getElementById("robot-antenna-top");
+            const eyeL = document.getElementById("eye-l");
+            const eyeR = document.getElementById("eye-r");
+            const mouth = document.getElementById("mouth");
+            const questionMark = document.getElementById("robot-question-mark");
+
+            const state = EMOTION_STATES[emotion];
+
+            head.setAttribute("color", state.color);
+            body.setAttribute("color", state.color);
+            antenna.setAttribute("color", state.color);
+
+            eyeL.setAttribute("scale", state.eyeScale);
+            eyeR.setAttribute("scale", state.eyeScale);
+            eyeL.setAttribute("rotation", state.eyeRotL);
+            eyeR.setAttribute("rotation", state.eyeRotR);
+
+            mouth.setAttribute("width", state.mouthSize.split(" ")[0]);
+            mouth.setAttribute("height", state.mouthSize.split(" ")[1]);
+
+            if (emotion === "不") {
+                questionMark.setAttribute("scale", "1 1 1");
+            } else {
+                questionMark.setAttribute("scale", "0 0 0");
+            }
+
+            triggerFullBodyAnimation(emotion);
+        }
+
+        function triggerFullBodyAnimation(emotion) {
+            const assembly = document.getElementById("robot-assembly");
+            const masterContainer = document.getElementById("robot-master-container");
+            const headGroup = document.getElementById("robot-head-group");
+            const armL = document.getElementById("arm-l-container");
+            const armR = document.getElementById("arm-r-container");
+            const legL = document.getElementById("leg-l-container");
+            const legR = document.getElementById("leg-r-container");
+
+            const entities = [assembly, masterContainer, headGroup, armL, armR, legL, legR];
+            entities.forEach(el => {
+                el.removeAttribute("animation");
+                el.setAttribute("rotation", "0 0 0");
+            });
+            masterContainer.setAttribute("position", "0 0 -2.5");
+
+            if (emotion === "喜") {
+                assembly.setAttribute("animation", `property: rotation; to: 0 360 0; dur: 1000; easing: easeInOutQuint; loop: 1`);
+            } 
+            else if (emotion === "怒") {
+                masterContainer.setAttribute("animation", `property: position; from: 0 0 -2.5; to: 0 0.5 -2.5; dur: 250; easing: easeOutQuad; dir: alternate; loop: 4`);
+            } 
+            else if (emotion === "哀") {
+                headGroup.setAttribute("animation", `property: rotation; to: 30 0 0; dur: 800; easing: easeOutQuad; loop: 1`);
+            } 
+            else if (emotion === "楽") {
+                armL.setAttribute("animation", `property: rotation; from: 0 0 0; to: 0 0 110; dur: 500; easing: easeOutBack; loop: 1`);
+                legR.setAttribute("animation", `property: rotation; from: 0 0 0; to: -60 0 0; dur: 500; easing: easeOutBack; loop: 1`);
+            }
+            else if (emotion === "不") {
+                headGroup.setAttribute("animation", `property: rotation; to: 0 0 -20; dur: 600; easing: easeInOutQuad; loop: 1`);
+            }
+        }
+    </script>
+</body>
+</html>
