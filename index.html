@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5 Emotion Robots - Sunbeam and Concentric Flower Field WebXR</title>
+    <title>5つの感情表現ロボット【WebXR】</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script>
         // 視線カーソル用コンポーネント
@@ -102,10 +102,10 @@
         
         <a-sky color="#87CEEB"></a-sky>
 
-        <a-sphere id="sun" position="6 5 -6" radius="0.8" color="#FFD700"></a-sphere>
+        <a-sphere id="sun" position="1 5 -6" radius="0.8" color="#FFD700"></a-sphere>
 
         <a-entity light="type: ambient; color: #E0F2FF; intensity: 0.8"></a-entity>
-        <a-entity light="type: directional; color: #FFFDF0; intensity: 1.5; castShadow: true" position="6 5 -6"></a-entity>
+        <a-entity light="type: directional; color: #FFFDF0; intensity: 1.5; castShadow: true" position="1 5 -6"></a-entity>
 
         <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#3A7D14"></a-plane>
         
@@ -177,11 +177,11 @@
                 <a-text value="Scold" font="roboto" align="center" width="2" color="#222222"></a-text>
             </a-plane>
 
-            <a-plane class="clickable" clickable-btn position="0.5 -0.1 0.03" width="0.38" height="0.15" color="#FFFFFF" onclick="talkToRobot('I lost my favorite toy today... I feel so down.')">
+            <a-plane class="clickable" clickable-btn position="0.5 -0.1 0.03" width="0.38" height="0.15" color="#FFFFFF" onclick="causeSadNewsError()">
                 <a-text value="Sad news" font="roboto" align="center" width="1.8" color="#222222"></a-text>
             </a-plane>
 
-            <a-plane class="clickable" clickable-btn position="-0.25 -0.3 0.03" width="0.38" height="0.15" color="#FFFFFF" onclick="talkToRobot('Hello! Let\'s hang out in this beautiful field!')">
+            <a-plane class="clickable" clickable-btn position="-0.25 -0.3 0.03" width="0.38" height="0.15" color="#FFFFFF" onclick="causeGreetError()">
                 <a-text value="Greet" font="roboto" align="center" width="2" color="#222222"></a-text>
             </a-plane>
 
