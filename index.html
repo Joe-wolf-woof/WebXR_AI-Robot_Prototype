@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5つの感情表現ロボット - Gemini WebXR (VR対応版)</title>
+    <title>5つの感情表現ロボット - Gemini WebXR</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script>
-        AFRAME.registerComponent('clickable-text', {
+        // 視線カーソルが重なったときに色を変えるコンポーネント
+        AFRAME.registerComponent('clickable-btn', {
             init: function () {
                 this.el.addEventListener('mouseenter', () => {
-                    this.el.setAttribute('text', 'color', '#FFF000');
+                    this.el.setAttribute('color', '#FFC65D');
                 });
                 this.el.addEventListener('mouseleave', () => {
-                    this.el.setAttribute('text', 'color', '#4CC3D9');
+                    this.el.setAttribute('color', '#333333');
                 });
             }
         });
@@ -73,61 +74,51 @@
         <a-entity light="type: ambient; color: #BBB"></a-entity>
         <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
         
-        <a-entity id="vr-ui" position="0 0.6 -1.5" rotation="-20 0 0">
-            <a-plane width="1.8" height="0.9" color="#000" opacity="0.85" shader="flat"></a-plane>
+        <a-entity id="vr-ui" position="0 0.6 -1.2" rotation="-15 0 0">
+            <a-plane width="1.6" height="0.8" color="#111111" opacity="0.9"></a-plane>
             
             <a-text id="vr-robot-text" 
-                    value="Robot: Talk to me! (Gaze at choices)" 
-                    position="0 0.3 0.01" 
+                    value="Robot: Talk to me by staring at options!" 
+                    position="0 0.25 0.02" 
                     align="center" 
-                    width="1.6" 
-                    color="#EFEFEF">
+                    width="1.4" 
+                    color="#FFF">
             </a-text>
 
-            <a-entity id="btn-1" clickable-text position="-0.5 -0.1 0.01" onclick="talkToRobot('You are awesome! Thank you!')">
-                <a-plane width="0.45" height="0.15" color="#333"></a-plane>
-                <a-text value="Praise" align="center" width="1.5" color="#4CC3D9" position="0 0 0.01"></a-text>
-            </a-entity>
+            <a-plane class="clickable" clickable-btn position="-0.4 -0.1 0.02" width="0.35" height="0.15" color="#333" onclick="talkToRobot('You look amazing today!')">
+                <a-text value="Praise" align="center" width="1.5" color="#4CC3D9"></a-text>
+            </a-plane>
 
-            <a-entity id="btn-2" clickable-text position="0 -0.1 0.01" onclick="talkToRobot('I hate you, stupid robot.')">
-                <a-plane width="0.45" height="0.15" color="#333"></a-plane>
-                <a-text value="Angry" align="center" width="1.5" color="#4CC3D9" position="0 0 0.01"></a-text>
-            </a-entity>
+            <a-plane class="clickable" clickable-btn position="0 -0.1 0.02" width="0.35" height="0.15" color="#333" onclick="talkToRobot('Go away, silly robot.')">
+                <a-text value="Scold" align="center" width="1.5" color="#4CC3D9"></a-text>
+            </a-plane>
 
-            <a-entity id="btn-3" clickable-text position="0.5 -0.1 0.01" onclick="talkToRobot('I feel so lonely and sad today...')">
-                <a-plane width="0.45" height="0.15" color="#333"></a-plane>
-                <a-text value="Sad" align="center" width="1.5" color="#4CC3D9" position="0 0 0.01"></a-text>
-            </a-entity>
+            <a-plane class="clickable" clickable-btn position="0.4 -0.1 0.02" width="0.35" height="0.15" color="#333" onclick="talkToRobot('I lost my favorite toy...')">
+                <a-text value="Sad News" align="center" width="1.5" color="#4CC3D9"></a-text>
+            </a-plane>
 
-            <a-entity id="btn-4" clickable-text position="-0.25 -0.3 0.01" onclick="talkToRobot('Good morning! Let\'s have fun!')">
-                <a-plane width="0.45" height="0.15" color="#333"></a-plane>
-                <a-text value="Happy" align="center" width="1.5" color="#4CC3D9" position="0 0 0.01"></a-text>
-            </a-entity>
+            <a-plane class="clickable" clickable-btn position="-0.2 -0.3 0.02" width="0.35" height="0.15" color="#333" onclick="talkToRobot('Hello! Let us play together!')">
+                <a-text value="Greet" align="center" width="1.5" color="#4CC3D9"></a-text>
+            </a-plane>
 
-            <a-entity id="btn-5" clickable-text position="0.25 -0.3 0.01" onclick="talkToRobot('Blah blah abracadabra 12345')">
-                <a-plane width="0.45" height="0.15" color="#333"></a-plane>
-                <a-text value="Unknown" align="center" width="1.5" color="#4CC3D9" position="0 0 0.01"></a-text>
-            </a-entity>
+            <a-plane class="clickable" clickable-btn position="0.2 -0.3 0.02" width="0.35" height="0.15" color="#333" onclick="talkToRobot('Abra-ca-dabra 12345!')">
+                <a-text value="Mystery" align="center" width="1.5" color="#4CC3D9"></a-text>
+            </a-plane>
         </a-entity>
 
         <a-entity camera look-controls position="0 1.5 0">
             <a-cursor id="cursor"
-                      animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
-                      animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1000"
-                      event-set__mouseenter="_event: mouseenter; color: springgreen"
-                      event-set__mouseleave="_event: mouseleave; color: black"
-                      raycaster="objects: [clickable-text]"
+                      raycaster="objects: .clickable"
                       fuse="true" 
                       fuse-timeout="1000"
                       color="#4CC3D9"
-                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      geometry="primitive: ring; radiusInner: 0.015; radiusOuter: 0.025"
                       position="0 0 -1">
             </a-cursor>
         </a-entity>
     </a-scene>
 
     <script>
-        // 【注意】本番運用の際は、APIキーの漏洩を防ぐためサーバーサイド（Node.js等）を経由させてください。
         const API_KEY = "AQ.Ab8RN6KV_9pkC7l47CkDd3brktIQJkwi2YGs46igNTucVnOx4A"; 
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
 
@@ -139,18 +130,15 @@
             "不": { color: "#A0A0A0", eyeScale: "0.8 0.8 1", eyeRotL: "0 0 15", eyeRotR: "0 0 15", mouthSize: "0.06 0.06 0.01" } 
         };
 
-        // 引数でユーザーメッセージを受け取るように変更
         async function talkToRobot(userMessage) {
             const vrRobotText = document.getElementById("vr-robot-text");
-            if (!userMessage) return;
-
             vrRobotText.setAttribute("value", "Robot: Thinking...");
 
             const prompt = `
-            あなたは感情を持ったロボットです。ユーザーの発言に対して短く会話をしてください。日本語ではなく、VR表示に適した「英語」で30文字以内で応答してください。
+            あなたは感情を持ったロボットです。ユーザーの発言に対して、短く簡潔な「英語(English)」で会話をしてください。日本語は絶対に使わないでください。30文字以内で短く答えてください。
             
             【超重要ルール】
-            ユーザーの発言から【喜・怒・哀・楽】のどれに当てはまるかを判定し、必ず生成する応答テキストの「一番最初」に指定のタグを付けてください。
+            ユーザーの発言から【喜・怒・哀・楽】のどれに当てはまるかを判定し、必ず生成する英語テキストの「一番最初」に指定の日本語タグを付けてください。
             もしどれにも分類できない、あるいは答えに困るような内容の場合は【不】と判定してください。
             
             基準：
@@ -178,7 +166,7 @@
 
             } catch (error) {
                 console.error(error);
-                applyRobotState("【不】Error: Connection failed.", vrRobotText);
+                applyRobotState("【不】Error: Something went wrong.", vrRobotText);
             }
         }
 
