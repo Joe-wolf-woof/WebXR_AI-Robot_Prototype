@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5つの感情表現ロボット【WebXR】</title>
+    <title>5 Emotion Robots - Sunbeam and Concentric Flower Field WebXR</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script>
         // 視線カーソル用コンポーネント
@@ -31,9 +31,9 @@
             const centerZ = -2.5;
 
             let flowerCount = 0;
-            // ロボットを中心に、半径1.5mから9.0m（より高密度・密集）まで同心円状に配置
+            // 【修正】UIパネル(z: -1.2)に大きな花が被らないよう、開始半径を 1.5 から 2.0 に広げてずらしました
             for (let r = 0; r < rings; r++) {
-                const distance = 1.5 + (r * 0.5); // 各リングの半径の間隔を狭めて密集化
+                const distance = 2.0 + (r * 0.5); // 各リングの半径の間隔
                 const flowersInRing = Math.floor((totalFlowers / rings) * (distance / 4)); // 外側ほど花の数を増やす
                 
                 for (let i = 0; i < flowersInRing; i++) {
@@ -102,10 +102,10 @@
         
         <a-sky color="#87CEEB"></a-sky>
 
-        <a-sphere id="sun" position="15 12 -15" radius="1.8" color="#FFD700"></a-sphere>
+        <a-sphere id="sun" position="6 5 -6" radius="0.8" color="#FFD700"></a-sphere>
 
         <a-entity light="type: ambient; color: #E0F2FF; intensity: 0.8"></a-entity>
-        <a-entity light="type: directional; color: #FFFDF0; intensity: 1.5; castShadow: true" position="15 12 -15"></a-entity>
+        <a-entity light="type: directional; color: #FFFDF0; intensity: 1.5; castShadow: true" position="6 5 -6"></a-entity>
 
         <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#3A7D14"></a-plane>
         
