@@ -1,355 +1,212 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5つの感情表現ロボット【WebXR】軽量化版</title>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script>
-        // 视線カーソル用コンポーネント
-        AFRAME.registerComponent('clickable-btn', {
-            init: function () {
-                this.el.addEventListener('mouseenter', () => {
-                    this.el.setAttribute('color', '#FFD700');
-                });
-                this.el.addEventListener('mouseleave', () => {
-                    this.el.setAttribute('color', '#FFFFFF');
-                });
-            }
-        });
-
-        // ページ読み込み完了時、地面に同心円状のお花を配置するスクリプト
-        window.addEventListener('DOMContentLoaded', () => {
-            const flowerField = document.getElementById('flower-field');
-            // カラフルな花畑にするためのカラーバリエーション
-            const flowerColors = ['#FF3E96', '#FF3636', '#FF69B4', '#FFA500', '#9B30FF', '#00BFFF', '#7B68EE', '#FFFFFF', '#FFD700'];
-            
-            const totalFlowers = 1500; // 1500本に削減
-            const rings = 15;
-
-            let flowerCount = 0;
-            // ユーザー(0,0,0)を中心に半径1.0mから8.5mまで高密度に密集配置
-            for (let r = 0; r < rings; r++) {
-                const distance = 1.0 + (r * 0.5); // 各リングの半径を狭くして密集させる
-                const flowersInRing = Math.floor((totalFlowers / rings) * (distance / 4)); // 外側ほど花の数を増やす
-                
-                for (let i = 0; i < flowersInRing; i++) {
-                    if (flowerCount >= totalFlowers) break;
-
-                    // 同心円を描くための角度計算
-                    const angle = (i / flowersInRing) * Math.PI * 2 + (Math.random() * 0.04);
-                    const x = Math.cos(angle) * distance;
-                    const z = Math.sin(angle) * distance;
-                    const y = 0;
-
-                    // 1つの花をまとめるグループ
-                    const flowerGroup = document.createElement('a-entity');
-                    flowerGroup.setAttribute('position', `${x} ${y} ${z}`);
-                    
-                    // お花のサイズ設定
-                    const scale = 1.0 + Math.random() * 1.2;
-                    flowerGroup.setAttribute('scale', `${scale} ${scale} ${scale}`);
-
-                    // 1. 茎と葉の生成
-                    const stemGroup = document.createElement('a-entity');
-                    const stemHeight = 0.1 + Math.random() * 0.12;
-                    const stem = document.createElement('a-cylinder');
-                    stem.setAttribute('radius', '0.008');
-                    stem.setAttribute('height', stemHeight);
-                    stem.setAttribute('position', `0 ${stemHeight / 2} 0`);
-                    stem.setAttribute('color', '#2E8B57');
-                    stemGroup.appendChild(stem);
-
-                    // 葉（2枚）
-                    const leaf1 = document.createElement('a-cylinder');
-                    leaf1.setAttribute('radius', '0.003');
-                    leaf1.setAttribute('height', '0.04');
-                    leaf1.setAttribute('position', `0 ${stemHeight * 0.4} 0.015`);
-                    leaf1.setAttribute('rotation', '45 0 0');
-                    leaf1.setAttribute('color', '#3A9D23');
-                    stemGroup.appendChild(leaf1);
-                    const leaf2 = document.createElement('a-cylinder');
-                    leaf2.setAttribute('radius', '0.003');
-                    leaf2.setAttribute('height', '0.04');
-                    leaf2.setAttribute('position', `0 ${stemHeight * 0.4} -0.015`);
-                    leaf2.setAttribute('rotation', '-45 0 0');
-                    leaf2.setAttribute('color', '#3A9D23');
-                    stemGroup.appendChild(leaf2);
-
-                    flowerGroup.appendChild(stemGroup);
-
-                    // 2. 花びら（軽量化：6枚構成＆カラフル化）
-                    const petalsGroup = document.createElement('a-entity');
-                    petalsGroup.setAttribute('position', `0 ${stemHeight} 0`);
-                    petalsGroup.setAttribute('rotation', `${Math.random() * 10} ${(angle * 180 / Math.PI)} ${Math.random() * 10}`);
-                    
-                    // ランダムに花の色を決定してカラフルにする
-                    const randomFlowerColor = flowerColors[Math.floor(Math.random() * flowerColors.length)];
-                    
-                    for (let p = 0; p < 6; p++) { // 12枚から6枚に削減してポリゴン数を半分に軽量化
-                        const petal = document.createElement('a-cone');
-                        petal.setAttribute('radius-bottom', '0.02');
-                        petal.setAttribute('radius-top', '0.0');
-                        petal.setAttribute('height', '0.1'); 
-                        const petalAngle = (p / 6) * Math.PI * 2;
-                        const petalX = Math.cos(petalAngle) * 0.04;
-                        const petalZ = Math.sin(petalAngle) * 0.04;
-                        petal.setAttribute('position', `${petalX} 0 ${petalZ}`);
-                        petal.setAttribute('rotation', `-90 ${(petalAngle * 180 / Math.PI) - 90} 0`);
-                        petal.setAttribute('color', randomFlowerColor);
-                        petalsGroup.appendChild(petal);
-                    }
-                    flowerGroup.appendChild(petalsGroup);
-
-                    // 3. 花の中央（芯の部分）
-                    const center = document.createElement('a-cylinder');
-                    center.setAttribute('radius', '0.035'); 
-                    center.setAttribute('height', '0.01'); 
-                    center.setAttribute('position', `0 ${stemHeight + 0.005} 0`);
-                    center.setAttribute('color', '#FFD700'); // 中央は黄色系に固定して花びらを引き立てる
-                    flowerGroup.appendChild(center);
-
-                    flowerField.appendChild(flowerGroup);
-                    flowerCount++;
-                }
-            }
-        });
-    </script>
+    <title>軽量版 WebXR AI Robot Flower Field</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; }
+    </style>
 </head>
 <body>
 
     <a-scene xr-mode-ui="enabled: true">
         
+        <a-assets>
+            <a-asset-item id="jp-font" src="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/notosansjapanese/NotoSansJapanese-Medium.json"></a-asset-item>
+        </a-assets>
+
         <a-sky color="#87CEEB"></a-sky>
+        <a-ambient-light color="#ffffff" intensity="0.6"></a-ambient-light>
+        <a-directional-light intensity="0.5" position="10 15 5"></a-directional-light>
 
-        <a-sphere id="sun" position="10 15 5" radius="1.8" color="#FFD700" material="shader: flat; fog: false"></a-sphere>
+        <a-sphere position="10 15 5" radius="3" color="#FFD700" shader="flat"></a-sphere>
 
-        <a-entity light="type: ambient; color: #E0F2FF; intensity: 0.8"></a-entity>
-        <a-entity light="type: directional; color: #FFFDF0; intensity: 1.5; castShadow: true" position="10 15 5"></a-entity>
+        <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#228B22"></a-plane>
 
-        <a-plane position="0 0 0" rotation="-90 0 0" width="150" height="150" color="#3A7D14"></a-plane>
-        
-        <a-entity id="flower-field"></a-entity>
+        =======================================================================================
+        =======================================================================================
+        <a-entity id="robot" position="0 0 -2.5">
+            <a-sphere id="robot-head" position="0 1.5 0" radius="0.35" color="#E0E0E0">
+                <a-sphere id="eye-l" position="-0.12 0.05 0.3" radius="0.05" color="#00FFFF"></a-sphere>
+                <a-sphere id="eye-r" position="0.12 0.05 0.3" radius="0.05" color="#00FFFF"></a-sphere>
+                <a-cylinder position="-0.38 0 0" rotation="0 0 90" radius="0.05" height="0.1" color="#A0A0A0"></a-cylinder>
+                <a-cylinder position="0.38 0 0" rotation="0 0 -90" radius="0.05" height="0.1" color="#A0A0A0"></a-cylinder>
+            </a-sphere>
 
-        <a-entity id="robot-master-container" position="0 0 -2.5">
-            <a-entity id="robot-assembly" position="0 0.8 0">
-                
-                <a-text id="robot-question-mark" 
-                        value="?" 
-                        position="0 1.6 0" 
-                        scale="0 0 0" 
-                        color="#FFFFFF" 
-                        align="center" 
-                        width="7" 
-                        font="mozillavr">
-                </a-text>
+            <a-cylinder id="robot-body" position="0 0.8 0" radius="0.3" height="0.8" color="#CCCCCC">
+                <a-box position="0 0.1 0.28" width="0.2" height="0.1" depth="0.05" color="#32CD32"></a-box>
+            </a-cylinder>
 
-                <a-cylinder position="0 1.1 0" radius="0.01" height="0.2" color="#aaa"></a-cylinder>
-                <a-sphere id="robot-antenna-top" position="0 1.2 0" radius="0.04" color="#7BC8A4"></a-sphere>
+            <a-box id="arm-l" position="-0.45 0.9 0" width="0.1" height="0.5" depth="0.1" color="#A0A0A0"></a-box>
+            <a-box id="arm-r" position="0.45 0.9 0" width="0.1" height="0.5" depth="0.1" color="#A0A0A0"></a-box>
 
-                <a-entity id="robot-head-group" position="0 0.8 0">
-                    <a-box id="robot-head" position="0 0 0" width="0.5" height="0.4" depth="0.4" color="#7BC8A4"></a-box>
-                    
-                    <a-box id="eye-l" position="-0.12 0.05 0.21" width="0.06" height="0.06" depth="0.01" color="#000"></a-box>
-                    <a-box id="eye-r" position="0.12 0.05 0.21" width="0.06" height="0.06" depth="0.01" color="#000"></a-box>
-                    <a-box id="mouth" position="0 -0.08 0.21" width="0.25" height="0.04" depth="0.01" color="#000"></a-box>
-                </a-entity>
+            <a-cylinder position="-0.15 0.2 0" radius="0.08" height="0.4" color="#808080"></a-cylinder>
+            <a-cylinder position="0.15 0.2 0" radius="0.08" height="0.4" color="#808080"></a-cylinder>
 
-                <a-cylinder position="0 0.55 0" radius="0.06" height="0.1" color="#888"></a-cylinder>
+            <a-entity id="ui-instruction" 
+                      position="0 2.2 0" 
+                      text="value: Look at the options and select!; align: center; width: 3; color: #FFFFFF; font: #jp-font; shader: msdf">
+                <a-plane width="2.2" height="0.3" color="#333333" material="transparent: true; opacity: 0.8" position="0 0 -0.01"></a-plane>
+            </a-entity>
 
-                <a-box id="robot-body" position="0 0.1 0" width="0.7" height="0.8" depth="0.5" color="#7BC8A4"></a-box>
-                <a-box position="0 0.1 0.26" width="0.4" height="0.3" depth="0.01" color="#fff" opacity="0.2"></a-box>
+            <a-entity id="ui-response" 
+                      position="0 1.9 0.1" 
+                      text="value: ぼくに視線を合わせてね！; align: center; width: 2.5; color: #00FFFF; font: #jp-font; shader: msdf">
+                <a-plane width="2.0" height="0.25" color="#111111" material="transparent: true; opacity: 0.8" position="0 0 -0.01"></a-plane>
+            </a-entity>
 
-                <a-entity id="arm-l-container" position="-0.4 0.4 0">
-                    <a-box id="arm-l" position="0 -0.2 0" width="0.1" height="0.5" depth="0.1" color="#888"></a-box>
-                </a-entity>
-                
-                <a-entity id="arm-r-container" position="0.4 0.4 0">
-                    <a-box id="arm-r" position="0 -0.2 0" width="0.1" height="0.5" depth="0.1" color="#888"></a-box>
-                </a-entity>
+            <a-entity id="btn-praise" class="clickable" position="-0.6 1.2 0.3" 
+                      text="value: ほめる; align: center; width: 2; color: #FFFFFF; font: #jp-font; shader: msdf"
+                      praise-action>
+                <a-cone radius-bottom="0.2" radius-top="0" height="0.15" rotation="90 0 0" position="0 0 -0.05" color="#FF69B4"></a-cone>
+            </a-entity>
 
-                <a-entity id="leg-l-container" position="-0.18 -0.3 0">
-                    <a-cylinder id="leg-l" position="0 -0.2 0" radius="0.05" height="0.4" color="#666"></a-cylinder>
-                </a-entity>
-                <a-entity id="leg-r-container" position="0.18 -0.3 0">
-                    <a-cylinder id="leg-r" position="0 -0.2 0" radius="0.05" height="0.4" color="#666"></a-cylinder>
-                </a-entity>
+            <a-entity id="btn-scold" class="clickable" position="0.6 1.2 0.3" 
+                      text="value: しかる; align: center; width: 2; color: #FFFFFF; font: #jp-font; shader: msdf"
+                      scold-action>
+                <a-cone radius-bottom="0.2" radius-top="0" height="0.15" rotation="90 0 0" position="0 0 -0.05" color="#4169E1"></a-cone>
             </a-entity>
         </a-entity>
 
-        <a-entity id="vr-ui" position="0 0.6 -1.2" rotation="-15 0 0">
-            <a-plane width="1.6" height="0.8" color="#111111" opacity="0.8"></a-plane>
-            
-            <a-text id="vr-robot-text" 
-                    value="Robot: Stare at me and select an option!" 
-                    font="roboto"
-                    position="0 0.23 0.03" 
-                    align="center" 
-                    width="1.4" 
-                    color="#FFFFFF">
-            </a-text>
+        =======================================================================================
+        =======================================================================================
+        <a-entity id="flower-field"></a-entity>
 
-            <a-plane class="clickable" clickable-btn position="-0.5 -0.1 0.03" width="0.38" height="0.15" color="#FFFFFF" onclick="talkToRobot('You look amazing today! I love your style!')">
-                <a-text value="Praise" font="roboto" align="center" width="2" color="#222222"></a-text>
-            </a-plane>
-
-            <a-plane class="clickable" clickable-btn position="0 -0.1 0.03" width="0.38" height="0.15" color="#FFFFFF" onclick="talkToRobot('Go away! You useless piece of junk!')">
-                <a-text value="Scold" font="roboto" align="center" width="2" color="#222222"></a-text>
-            </a-plane>
-
-            <a-plane class="clickable" clickable-btn position="0.5 -0.1 0.03" width="0.38" height="0.15" color="#FFFFFF" onclick="talkToRobot('I lost my favorite toy today... I feel so down.')">
-                <a-text value="Sad news" font="roboto" align="center" width="1.8" color="#222222"></a-text>
-            </a-plane>
-
-            <a-plane class="clickable" clickable-btn position="-0.25 -0.3 0.03" width="0.38" height="0.15" color="#FFFFFF" onclick="talkToRobot('Hello! Let\'s hang out in this beautiful field!')">
-                <a-text value="Greet" font="roboto" align="center" width="2" color="#222222"></a-text>
-            </a-plane>
-
-            <a-plane class="clickable" clickable-btn position="0.25 -0.3 0.03" width="0.38" height="0.15" color="#FFFFFF" onclick="talkToRobot('Abracadabra 12345! What am I saying?')">
-                <a-text value="Mystery" font="roboto" align="center" width="2" color="#222222"></a-text>
-            </a-plane>
-        </a-entity>
-
-        <a-entity camera look-controls position="0 1.5 0">
+        <a-entity camera look-controls position="0 1.6 0">
             <a-cursor id="cursor"
+                      animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
+                      animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500"
+                      event-set__mouseenter="_event: mouseenter; color: #00FFFF"
+                      event-set__mouseleave="_event: mouseleave; color: #FFF"
                       raycaster="objects: .clickable"
-                      fuse="true" 
-                      fuse-timeout="1000"
-                      color="#FF3E96"
-                      geometry="primitive: ring; radiusInner: 0.015; radiusOuter: 0.025"
+                      color="#FFF"
+                      inner-radius="0.02"
+                      outer-radius="0.03"
                       position="0 0 -1">
             </a-cursor>
         </a-entity>
-    </scene>
+
+    </a-scene>
 
     <script>
-        const API_KEY = "AQ.Ab8RN6KV_9pkC7l47CkDd3brktIQJkwi2YGs46igNTucVnOx4A"; 
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+        // ===================================================================================
+        // 高速・軽量なカラフル花畑（1500本）の動的生成スクリプト
+        // ===================================================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            const field = document.getElementById('flower-field');
+            const FLOWER_COUNT = 1500; // ご要望に基づき1500本に削減
+            const colors = ['#FF6B6B', '#4D96FF', '#6BCB77', '#FFD93D', '#9B5DE5', '#F15BB5'];
 
-        const EMOTION_STATES = {
-            "喜": { color: "#FFC65D", eyeScale: "1 1 1", eyeRotL: "0 0 10", eyeRotR: "0 0 -10", mouthSize: "0.22 0.12 0.01" },
-            "怒": { color: "#EF2D5E", eyeScale: "1 0.4 1", eyeRotL: "0 0 -20", eyeRotR: "0 0 20", mouthSize: "0.15 0.03 0.01" },
-            "哀": { color: "#4CC3D9", eyeScale: "0.6 1 1", eyeRotL: "0 0 25", eyeRotR: "0 0 -25", mouthSize: "0.1 0.02 0.01" },
-            "楽": { color: "#7BC8A4", eyeScale: "1.3 0.3 1", eyeRotL: "0 0 0", eyeRotR: "0 0 0", mouthSize: "0.25 0.04 0.01" },
-            "不": { color: "#A0A0A0", eyeScale: "0.8 0.8 1", eyeRotL: "0 0 15", eyeRotR: "0 0 15", mouthSize: "0.06 0.06 0.01" } 
-        };
+            // 1つのエンティティ（DocumentFragment）にまとめてから追加することでDOM挿入の負荷を軽減
+            const fragment = document.createDocumentFragment();
 
-        async function talkToRobot(userMessage) {
-            const vrRobotText = document.getElementById("vr-robot-text");
-            vrRobotText.setAttribute("value", "Robot: Thinking...");
+            for (let i = 0; i < FLOWER_COUNT; i++) {
+                // ユーザー (0,0,0) を中心に、適度に集まるよう半径を調整（1.5m〜18mの範囲）
+                const angle = Math.random() * Math.PI * 2;
+                const radius = 1.5 + Math.random() * 16.5; 
+                const x = Math.cos(angle) * radius;
+                const z = Math.sin(angle) * radius;
+                const y = 0; // 地面
 
-            const prompt = `
-            You are an emotional robot. Respond to the user's input in short, concise ENGLISH. Keep your response under 30 characters.
+                // 花全体の親エンティティ
+                const flowerGroup = document.createElement('a-entity');
+                flowerGroup.setAttribute('position', `${x} ${y} ${z}`);
+                
+                // ランダムなスケールで自然さを表現
+                const scale = 0.4 + Math.random() * 0.4;
+                flowerGroup.setAttribute('scale', `${scale} ${scale} ${scale}`);
+
+                // 1. 茎 (a-cylinder)
+                const stem = document.createElement('a-cylinder');
+                stem.setAttribute('color', '#2E7D32');
+                stem.setAttribute('radius', '0.02');
+                stem.setAttribute('height', '0.8');
+                stem.setAttribute('position', '0 0.4 0');
+                flowerGroup.appendChild(stem);
+
+                // 2. 花びら（ご要望：薄い円柱3つを60度ずつ回転させて交差、計6枚の花びらを表現）
+                const flowerColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // 円柱1 (角度0)
+                const petal1 = document.createElement('a-cylinder');
+                petal1.setAttribute('color', flowerColor);
+                petal1.setAttribute('radius', '0.25'); // 花の広がり
+                petal1.setAttribute('height', '0.01');  // 極薄の円柱
+                petal1.setAttribute('rotation', '90 0 0'); // 地面に対して垂直（正面を向く）
+                petal1.setAttribute('position', '0 0.8 0.01');
+                flowerGroup.appendChild(petal1);
+
+                // 円柱2 (角度60)
+                const petal2 = document.createElement('a-cylinder');
+                petal2.setAttribute('color', flowerColor);
+                petal2.setAttribute('radius', '0.25');
+                petal2.setAttribute('height', '0.01');
+                petal2.setAttribute('rotation', '90 0 60'); // 60度回転
+                petal2.setAttribute('position', '0 0.8 0.01');
+                flowerGroup.appendChild(petal2);
+
+                // 円柱3 (角度120)
+                const petal3 = document.createElement('a-cylinder');
+                petal3.setAttribute('color', flowerColor);
+                petal3.setAttribute('radius', '0.25');
+                petal3.setAttribute('height', '0.01');
+                petal3.setAttribute('rotation', '90 0 120'); // 120度回転
+                petal3.setAttribute('position', '0 0.8 0.01');
+                flowerGroup.appendChild(petal3);
+
+                // 3. 花の中央の芯（a-sphere：小さめの黄色いコア）
+                const centerCore = document.createElement('a-sphere');
+                centerCore.setAttribute('color', '#FFA500');
+                centerCore.setAttribute('radius', '0.07');
+                centerCore.setAttribute('position', '0 0.8 0.02');
+                flowerGroup.appendChild(centerCore);
+
+                fragment.appendChild(flowerGroup);
+            }
             
-            [CRITICAL RULE]
-            Determine the emotion from the user's message: Joy (喜), Anger (怒), Sadness (哀), Fun (楽), or Confused (不).
-            You MUST put the corresponding Japanese kanji tag 【喜】, 【怒】, 【哀】, 【楽】, or 【不】 at the VERY BEGINNING of your response text.
-            
-            Criteria:
-            【喜】 User praises or thanks you.
-            【怒】 User is aggressive, mean, or insults you.
-            【哀】 User talks about sad or negative topics.
-            【楽】 User is happy, positive, or gives a casual greeting.
-            【不】 Inputs that make no sense, confusing questions, or fallback.
-            
-            User message:
-            "${userMessage}"
-            `;
+            // シーンへ一括追加
+            field.appendChild(fragment);
+        });
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        // ===================================================================================
+        // ロボットのインタラクション・モーション制御（Gemini API連携用プレースホルダー）
+        // ===================================================================================
+        const head = document.getElementById('robot-head');
+        const responseText = document.getElementById('ui-response');
+
+        // モーション適用関数
+        function triggerMotion(type) {
+            // 既存のアニメーションをクリア
+            head.removeAttribute('animation');
+            
+            if (type === 'happy') {
+                // 喜：ジャンプ＆うなずき
+                head.setAttribute('animation', 'property: position; to: 0 1.7 0; dur: 300; dir: alternate; loop: 2; easing: easeOutQuad');
+                responseText.setAttribute('text', 'value: えへへ、ほめられちゃった！嬉しいな！');
+            } else if (type === 'sad') {
+                // 哀：うつむいて左右に微振動
+                head.setAttribute('animation', 'property: rotation; to: 15 0 10; dur: 400; dir: alternate; loop: 2; easing: linear');
+                responseText.setAttribute('text', 'value: しゅん…次からは気をつけるね。');
+            }
+        }
+
+        // 視線ボタンイベント登録
+        AFRAME.registerComponent('praise-action', {
+            init: function () {
+                this.el.addEventListener('click', () => {
+                    triggerMotion('happy');
                 });
-
-                const data = await response.json();
-                const aiResponse = data.candidates[0].content.parts[0].text.trim();
-
-                applyRobotState(aiResponse, vrRobotText);
-
-            } catch (error) {
-                console.error(error);
-                applyRobotState("【不】Oops! Something went wrong.", vrRobotText);
             }
-        }
+        });
 
-        function applyRobotState(aiResponse, uiElement) {
-            let emotion = "不"; 
-            let cleanText = aiResponse;
-
-            const match = aiResponse.match(/【(喜|怒|哀|楽|不)】/);
-            if (match) {
-                emotion = match[1];
-                cleanText = aiResponse.replace(/【.*?】/, "").trim();
+        AFRAME.registerComponent('scold-action', {
+            init: function () {
+                this.el.addEventListener('click', () => {
+                    triggerMotion('sad');
+                });
             }
-
-            uiElement.setAttribute("value", "Robot: " + cleanText);
-
-            const head = document.getElementById("robot-head");
-            const body = document.getElementById("robot-body");
-            const antenna = document.getElementById("robot-antenna-top");
-            const eyeL = document.getElementById("eye-l");
-            const eyeR = document.getElementById("eye-r");
-            const mouth = document.getElementById("mouth");
-            const questionMark = document.getElementById("robot-question-mark");
-
-            const state = EMOTION_STATES[emotion];
-
-            head.setAttribute("color", state.color);
-            body.setAttribute("color", state.color);
-            antenna.setAttribute("color", state.color);
-
-            eyeL.setAttribute("scale", state.eyeScale);
-            eyeR.setAttribute("scale", state.eyeScale);
-            eyeL.setAttribute("rotation", state.eyeRotL);
-            eyeR.setAttribute("rotation", state.eyeRotR);
-
-            mouth.setAttribute("width", state.mouthSize.split(" ")[0]);
-            mouth.setAttribute("height", state.mouthSize.split(" ")[1]);
-
-            if (emotion === "不") {
-                questionMark.setAttribute("scale", "1 1 1");
-            } else {
-                questionMark.setAttribute("scale", "0 0 0");
-            }
-
-            triggerFullBodyAnimation(emotion);
-        }
-
-        function triggerFullBodyAnimation(emotion) {
-            const assembly = document.getElementById("robot-assembly");
-            const masterContainer = document.getElementById("robot-master-container");
-            const headGroup = document.getElementById("robot-head-group");
-            const armL = document.getElementById("arm-l-container");
-            const armR = document.getElementById("arm-r-container");
-            const legL = document.getElementById("leg-l-container");
-            const legR = document.getElementById("leg-r-container");
-
-            const entities = [assembly, masterContainer, headGroup, armL, armR, legL, legR];
-            entities.forEach(el => {
-                el.removeAttribute("animation");
-                el.setAttribute("rotation", "0 0 0");
-            });
-            masterContainer.setAttribute("position", "0 0 -2.5");
-
-            if (emotion === "喜") {
-                assembly.setAttribute("animation", `property: rotation; to: 0 360 0; dur: 1000; easing: easeInOutQuint; loop: 1`);
-            } 
-            else if (emotion === "怒") {
-                masterContainer.setAttribute("animation", `property: position; from: 0 0 -2.5; to: 0 0.5 -2.5; dur: 250; easing: easeOutQuad; dir: alternate; loop: 4`);
-            } 
-            else if (emotion === "哀") {
-                headGroup.setAttribute("animation", `property: rotation; to: 30 0 0; dur: 800; easing: easeOutQuad; loop: 1`);
-            } 
-            else if (emotion === "楽") {
-                armL.setAttribute("animation", `property: rotation; from: 0 0 0; to: 0 0 110; dur: 500; easing: easeOutBack; loop: 1`);
-                legR.setAttribute("animation", `property: rotation; from: 0 0 0; to: -60 0 0; dur: 500; easing: easeOutBack; loop: 1`);
-            }
-            else if (emotion === "不") {
-                headGroup.setAttribute("animation", `property: rotation; to: 0 0 -20; dur: 600; easing: easeInOutQuad; loop: 1`);
-            }
-        }
+        });
     </script>
 </body>
 </html>
