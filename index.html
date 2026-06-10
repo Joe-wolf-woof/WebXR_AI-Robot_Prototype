@@ -227,7 +227,7 @@
             
             Criteria:
             【喜】 User praises or thanks you.
-            【怒】 User is aggressive, mean, or insults you.
+            【怒】 User is aggressive, mean, or scolds you.
             【哀】 User talks about sad or negative topics.
             【楽】 User is happy, positive, or gives a casual greeting.
             【不】 Inputs that make no sense, confusing questions, or fallback.
@@ -250,7 +250,7 @@
 
             } catch (error) {
                 console.error(error);
-                applyRobotState("【不】Oops! Something went wrong.", vrRobotText);
+                applyRobotState("【不】Umm… I didn't really understand.", vrRobotText);
             }
         }
 
