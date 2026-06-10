@@ -31,7 +31,6 @@
             const centerZ = -2.5;
 
             let flowerCount = 0;
-            // 【修正】UIパネル(z: -1.2)に大きな花が被らないよう、開始半径を 1.5 から 2.0 に広げてずらしました
             for (let r = 0; r < rings; r++) {
                 const distance = 2.0 + (r * 0.5); // 各リングの半径の間隔
                 const flowersInRing = Math.floor((totalFlowers / rings) * (distance / 4)); // 外側ほど花の数を増やす
@@ -50,7 +49,6 @@
                     const flowerGroup = document.createElement('a-entity');
                     flowerGroup.setAttribute('position', `${x} ${y} ${z}`);
                     
-                    // 【サイズを2倍に変更】(元の 0.4~0.9 から 0.8~1.8 へ)
                     const scale = (0.4 + Math.random() * 0.5) * 2;
                     flowerGroup.setAttribute('scale', `${scale} ${scale} ${scale}`);
 
@@ -80,10 +78,10 @@
                     center.setAttribute('color', '#FFD700'); 
                     flowerGroup.appendChild(center);
 
-                    // 【追加：葉っぱ】茎の横に緑の小さな球体（楕円形）を配置
+                    // 4. 葉っぱ
                     const leaf = document.createElement('a-sphere');
                     leaf.setAttribute('radius', '0.02');
-                    leaf.setAttribute('scale', '2 0.5 1'); // 横長に伸ばして葉っぱらしくする
+                    leaf.setAttribute('scale', '2 0.5 1');
                     leaf.setAttribute('position', `0.03 ${stemHeight * 0.5} 0`);
                     leaf.setAttribute('rotation', '0 0 20');
                     leaf.setAttribute('color', '#32CD32');
@@ -204,7 +202,8 @@
 
     <script>
         const API_KEY = "AQ.Ab8RN6KV_9pkC7l47CkDd3brktIQJkwi2YGs46igNTucVnOx4A"; 
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+        // 【エラー修正】 モデル名を正確な一般公開名称「gemini-1.5-flash」に変更しました
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
         const EMOTION_STATES = {
             "喜": { color: "#FFC65D", eyeScale: "1 1 1", eyeRotL: "0 0 10", eyeRotR: "0 0 -10", mouthSize: "0.22 0.12 0.01" },
@@ -227,7 +226,7 @@
             
             Criteria:
             【喜】 User praises or thanks you.
-            【怒】 User is aggressive, mean, or scolds you.
+            【怒】 User is aggressive, mean, or insults you.
             【哀】 User talks about sad or negative topics.
             【楽】 User is happy, positive, or gives a casual greeting.
             【不】 Inputs that make no sense, confusing questions, or fallback.
@@ -250,7 +249,7 @@
 
             } catch (error) {
                 console.error(error);
-                applyRobotState("【不】Umm…? What do you mean?", vrRobotText);
+                applyRobotState("【不】Oops! Something went wrong.", vrRobotText);
             }
         }
 
